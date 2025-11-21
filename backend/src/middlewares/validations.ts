@@ -1,10 +1,10 @@
-import { Joi, celebrate, Segments } from "celebrate";
+import { Joi, celebrate, Segments } from 'celebrate';
 
 export const validateCreateProduct = celebrate({
   [Segments.BODY]: Joi.object({
     title: Joi.string().min(2).max(30).required(),
     category: Joi.string().required(),
-    description: Joi.string().allow("", null),
+    description: Joi.string().allow('', null),
     price: Joi.number().allow(null),
     image: Joi.object({
       fileName: Joi.string().required(),
@@ -15,7 +15,7 @@ export const validateCreateProduct = celebrate({
 
 export const validateCreateOrder = celebrate({
   [Segments.BODY]: Joi.object({
-    payment: Joi.string().valid("card", "online").required(),
+    payment: Joi.string().valid('card', 'online').required(),
     email: Joi.string().email().required(),
     phone: Joi.string().required(),
     address: Joi.string().required(),

@@ -11,13 +11,13 @@ const cleanTempFiles = () => {
     const now = new Date().getTime();
     const dayInMs = 24 * 60 * 60 * 1000;
 
-    files.forEach(file => {
+    files.forEach((file) => {
       const filePath = path.join(tempDir, file);
       fs.stat(filePath, (err, stat) => {
         if (err) return;
 
         if (now - stat.mtime.getTime() > dayInMs) {
-          fs.unlink(filePath, err => {
+          fs.unlink(filePath, (err) => {
             if (err) console.error(`Error deleting file ${filePath}:`, err);
             else console.log(`Deleted temp file: ${filePath}`);
           });

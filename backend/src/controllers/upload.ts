@@ -1,18 +1,18 @@
-import { Request, Response, NextFunction } from "express";
-import path from "path";
-import fs from "fs";
+import { Request, Response, NextFunction } from 'express';
+import path from 'path';
+import fs from 'fs';
 
 export const uploadFile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
+      return res.status(400).json({ message: 'No file uploaded' });
     }
 
     const tempPath = req.file.path;
-    const filename = req.file.filename;
+    const { filename } = req.file;
     const originalName = req.file.originalname;
 
-    const targetDir = path.join(__dirname, "../../public/images");
+    const targetDir = path.join(__dirname, '../../public/images');
     const targetPath = path.join(targetDir, filename);
 
     if (!fs.existsSync(targetDir)) {
@@ -21,7 +21,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
 
     fs.rename(tempPath, targetPath, (err) => {
       if (err) {
-        console.error("Error moving file:", err);
+        console.error('Error moving file:', err);
         return next(err);
       }
 
@@ -31,7 +31,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
       });
     });
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error('Upload error:', error);
     next(error);
   }
 };

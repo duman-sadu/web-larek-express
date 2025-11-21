@@ -1,30 +1,32 @@
-import { Request, Response, NextFunction } from "express";
-import { faker } from "@faker-js/faker";
-import Product from "../models/product";
-import BadRequestError from "../errors/bad-request-error";
+import { Request, Response, NextFunction } from 'express';
+import { faker } from '@faker-js/faker';
+import Product from '../models/product';
+import BadRequestError from '../errors/bad-request-error';
 
 export const createOrder = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
-    const { payment, email, phone, address, total, items } = req.body;
+    const {
+      payment, email, phone, address, total, items,
+    } = req.body;
 
     if (
-      !payment ||
-      !email ||
-      !phone ||
-      !address ||
-      !items ||
-      !Array.isArray(items) ||
-      items.length === 0
+      !payment
+      || !email
+      || !phone
+      || !address
+      || !items
+      || !Array.isArray(items)
+      || items.length === 0
     ) {
-      return next(new BadRequestError("Некорректные данные заказа"));
+      return next(new BadRequestError('Некорректные данные заказа'));
     }
 
-    if (!["card", "online"].includes(payment)) {
-      return next(new BadRequestError("Некорректный способ оплаты"));
+    if (!['card', 'online'].includes(payment)) {
+      return next(new BadRequestError('Некорректный способ оплаты'));
     }
 
     const itemIds = items.map((i: any) => i.id);
@@ -32,13 +34,13 @@ export const createOrder = async (
     const products = await Product.find({ _id: { $in: itemIds } });
 
     if (products.length !== itemIds.length) {
-      return next(new BadRequestError("Некоторые товары не найдены"));
+      return next(new BadRequestError('Некоторые товары не найдены'));
     }
 
     let totalFromDB = 0;
 
     for (const p of products) {
-      if (p.price === null || typeof p.price !== "number") {
+      if (p.price === null || typeof p.price !== 'number') {
         return next(new BadRequestError(`Товар "${p.title}" не продается`));
       }
 
@@ -47,7 +49,7 @@ export const createOrder = async (
 
     if (totalFromDB !== total) {
       return next(
-        new BadRequestError("Сумма заказа не совпадает с ценами товаров")
+        new BadRequestError('Сумма заказа не совпадает с ценами товаров'),
       );
     }
 

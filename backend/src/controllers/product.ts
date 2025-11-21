@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from "express";
-import Product from "../models/product";
-import BadRequestError from "../errors/bad-request-error";
-import ConflictError from "../errors/conflict-error";
-import { Error as MongooseError } from "mongoose";
+import { Request, Response, NextFunction } from 'express';
+import { Error as MongooseError } from 'mongoose';
+import Product from '../models/product';
+import BadRequestError from '../errors/bad-request-error';
+import ConflictError from '../errors/conflict-error';
 
 export const getProducts = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const products = await Product.find().lean();
@@ -24,10 +24,12 @@ export const getProducts = async (
 export const createProduct = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
-    const { title, category, description, price, image } = req.body;
+    const {
+      title, category, description, price, image,
+    } = req.body;
 
     if (!image || !image.fileName || !image.originalName) {
       return next(new BadRequestError('Поле "image" заполнено некорректно'));
@@ -48,12 +50,12 @@ export const createProduct = async (
   } catch (error: any) {
     if (error instanceof MongooseError.ValidationError) {
       return next(
-        new BadRequestError("Ошибка валидации данных при создании товара")
+        new BadRequestError('Ошибка валидации данных при создании товара'),
       );
     }
 
     if (error.code === 11000) {
-      return next(new ConflictError("Товар с таким title уже существует"));
+      return next(new ConflictError('Товар с таким title уже существует'));
     }
 
     next(error);

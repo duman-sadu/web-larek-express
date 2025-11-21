@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IImage {
   fileName: string;
@@ -41,14 +41,14 @@ const productSchema = new Schema<IProduct>(
     },
     description: {
       type: String,
-      default: "",
+      default: '',
     },
     price: {
       type: Number,
       default: null,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export default mongoose.model<IProduct>("product", productSchema);
+export default mongoose.model<IProduct>('product', productSchema);
